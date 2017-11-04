@@ -1,5 +1,7 @@
 import React from 'react';
 
+
+//this will display Amazon Ads on non-mobile browsers
 export default function Aside() {
 	return (
 		<aside className="medium-3 columns hide-for-small">

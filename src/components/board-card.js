@@ -1,5 +1,7 @@
 import React from 'react';
+import './board-card.css';
 
+//displays relevant info on one board for sale
 export default function BoardCard(props) {
 	const board = props.board;
 
