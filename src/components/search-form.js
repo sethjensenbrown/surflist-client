@@ -24,8 +24,8 @@ export class SearchForm extends React.Component {
             onSubmit={this.props.handleSubmit(values => this.onSubmit(values))}>
 
                 <div className="select-state">
-                    <label htmlFor="location-state">State:</label>
-                    <Field name="location-state" component="select">
+                    <label htmlFor="state">State:</label>
+                    <Field name="state" component="select">
                         <option value="">Select a state</option>
                         <option value="AL">Alabama</option>
                         <option value="AK">Alaska</option>
@@ -84,8 +84,8 @@ export class SearchForm extends React.Component {
                 <div className="search-by-zip">
                     <label htmlFor="location-zip">Search by Zip Code:</label>
                     <div id="location-zip">
-                        <Field name="location-zip" component="input" type="number" placeholder="49125"/>
-                        <Field name="location-radius" component="select">
+                        <Field name="zip" component="input" type="number" placeholder="49125"/>
+                        <Field name="radius" component="select">
                             <option value="">Select search radius</option>
                             <option value="15">15 miles</option>
                             <option value="25">25 miles</option>
@@ -99,8 +99,8 @@ export class SearchForm extends React.Component {
                 <div className="price-range">
                     <label htmlFor="price">Price:</label>
                     <div id="price">
-                        <input name="price-min" component="input" type="number" placeholder="min"/>
-                        <input name="price-max" component="input" type="number" placeholder="max"/>
+                        <Field name="price-min" component="input" type="number" placeholder="min"/>
+                        <Field name="price-max" component="input" type="number" placeholder="max"/>
                     </div>
                 </div>
 

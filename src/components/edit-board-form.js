@@ -1,10 +1,8 @@
 import React from 'react';
 import {reduxForm, Field} from 'redux-form';
+import {API_BASE_URL} from '../config';
 
-/** 
- * File input workarround:
- * More info: http://redux-form.com/5.2.5/#/examples/file?_k=57hmlw
- */
+//File input workarround: More info at http://redux-form.com/5.2.5/#/examples/file?_k=57hmlw
 const customFileInput = (field) => {
   delete field.input.value; // <-- just delete the value property
   return <input type="file" id="file" {...field.input} />;
@@ -13,15 +11,72 @@ const customFileInput = (field) => {
 export class EditBoardForm extends React.Component {
     
     onSubmit(values) {
-        console.log(values);
+        const board = Object.assign({}, values, {image: "Haven't figured this out yet", _id: this.props.boardId});
+        //gets lat and lng from zip using GoogleMaps Geocoding API
+        fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${values.zip},USA`)
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            throw new Error('No response from GoogleMaps API');
+        })
+        .then(res => {
+                //adds lat and lng to board object for zip code search capabilities
+                let lng = res.results[0].geometry.location.lng;
+                let lat = res.results[0].geometry.location.lat;
+                board.location = {
+                    type: "Point",
+                    coordinates: [lng, lat]
+                }
+                //POST the board to the database
+                const options = {
+                    method: 'PUT',
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(board)
+                }
+                fetch(`${API_BASE_URL}/boards?_id=${this.props.boardId}`, options)
+                .then(res => {
+                    //if succesful, alert and redirect to homepage
+                    if (res.ok) {
+                        alert('Your board has been updated.');
+                        this.props.history.push('/');
+                    }
+                    else { 
+                        throw new Error('No response from SurfList API')
+                    }
+                })
+            })
+        .catch(err => {
+            console.error(err);
+            alert('Something went wrong');
+        })  
+    }
+
+    handleDelete() {
+        //confirm before deleting
+        if (window.confirm('Are you sure you want to Delete this board from SurfList?')) {
+            fetch(`${API_BASE_URL}/boards?_id=${this.props.boardId}`, {method: 'DELETE'})
+            .then( res => {
+                //if successful, alert and redirect to homepage
+                if (res.ok) {
+                    alert('Your board has been successfully deleted from SurfList');
+                    this.props.history.push('/');
+                }
+                else { 
+                    throw new Error('No response from SurfList API')
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Something went wrong');
+            })  
+        }
     }
 
 	render() {
         return (
-            <form 
-            id="edit-board-form" 
-            name="edit-board-form" 
-            onSubmit={this.props.handleSubmit(values => this.onSubmit(values))}>
+            <form id="edit-board-form" name="edit-board-form" >
+
                 <label htmlFor="title">Title:</label>
                 <div id="title">
                     <Field name="title" component="input" type="text" placeholder="ex. Surfboard for Sale!" />
@@ -39,7 +94,7 @@ export class EditBoardForm extends React.Component {
 
                 <div className="select-state">
                     <label htmlFor="location-state">State:</label>
-                    <Field name="location-state" component="select">
+                    <Field name="state" component="select">
                         <option value="">Select a state</option>
                         <option value="AL">Alabama</option>
                         <option value="AK">Alaska</option>
@@ -103,16 +158,16 @@ export class EditBoardForm extends React.Component {
                 <div className="board-type">
                     <label htmlFor="type">Type of Board:</label>
                     <div id="type">
-                        <Field name="type" value="type-short" component="input" type="radio"/>
+                        <Field name="board-type" value="type-short" component="input" type="radio"/>
                         <label htmlFor="type-short">shortboard ( - 7' )</label>
                         <br />
-                        <Field name="type" value="type-fun"  component="input" type="radio"/>
+                        <Field name="board-type" value="type-fun"  component="input" type="radio"/>
                         <label htmlFor="type-fun">funboard ( 7' - 9' )</label>
                         <br />
-                        <Field name="type" value="type-long" component="input" type="radio"/>
+                        <Field name="board-type" value="type-long" component="input" type="radio"/>
                         <label htmlFor="type-long">longboard ( 9' + )</label>
                         <br />
-                        <Field name="type" value="type-sup"  component="input" type="radio"/>
+                        <Field name="board-type" value="type-sup"  component="input" type="radio"/>
                         <label htmlFor="type-sup">SUP</label>
                     </div>
                 </div>
@@ -120,16 +175,16 @@ export class EditBoardForm extends React.Component {
                 <div className="board-condition">
                     <label htmlFor="condition">Condition:</label>
                     <div id="condition">
-                        <Field name="condition" value="condition-new" component="input" type="radio" />
+                        <Field name="board-condition" value="condition-new" component="input" type="radio" />
                         <label htmlFor="condition-new">new</label>
                         <br />
-                        <Field name="condition" value="condition-great" component="input" type="radio" />
+                        <Field name="board-condition" value="condition-great" component="input" type="radio" />
                         <label htmlFor="condition-great">great</label>
                         <br />
-                        <Field name="condition" value="condition-decent" component="input" type="radio" />
+                        <Field name="board-condition" value="condition-decent" component="input" type="radio" />
                         <label htmlFor="condition-decent">decent</label>
                         <br />
-                        <Field name="condition" value="condition-wrecked" component="input" type="radio" />
+                        <Field name="board-condition" value="condition-wrecked" component="input" type="radio" />
                         <label htmlFor="condition-wrecked">wrecked</label>
                     </div>
                 </div>
@@ -140,8 +195,16 @@ export class EditBoardForm extends React.Component {
                 </div>
 
                 <p> 
-                    <button className="button">Lets Try This Again!</button>
-                    <button className="alert button">Remove This Board From Surflist</button>
+                    <button 
+                    className="button" 
+                    onClick={this.props.handleSubmit(values => this.onSubmit(values))}>
+                        Lets Try This Again!
+                    </button>
+                    <button 
+                    className="alert button" 
+                    onClick={() => this.handleDelete()}>
+                        Remove This Board From Surflist
+                    </button>
                 </p>
             </form>
         )
