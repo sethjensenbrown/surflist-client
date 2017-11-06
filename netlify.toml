@@ -1,6 +1,0 @@
-# Production context: All deploys to the main
-# repository branch will inherit these settings.
-[context.production]
-  command = "make production"
-  [context.production.environment]
-    REACT_APP_API_BASE_URL = "https://boiling-meadow-48827.herokuapp.com/api"
