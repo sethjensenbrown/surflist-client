@@ -202,7 +202,10 @@ export class EditBoardForm extends React.Component {
                     </button>
                     <button 
                     className="alert button" 
-                    onClick={() => this.handleDelete()}>
+                    onClick={(event) => {
+                        event.preventDefault();
+                        this.handleDelete();
+                    }}>
                         Remove This Board From Surflist
                     </button>
                 </p>

@@ -16,7 +16,7 @@ export default class EditBoard extends React.Component {
 		}
 	}
 
-	componentDidMount() {
+	findBoard() {
 		fetch(`${API_BASE_URL}/boards?_id=${query._id}`, {method: 'GET'})
 		.then(res => {
 			if (res.ok) {
@@ -28,12 +28,18 @@ export default class EditBoard extends React.Component {
 			this.setState({
 				initialValues: Object.assign({}, body[0])
 			});
-			console.log(this.state.initialValues);
 		})
 		.catch(err => {
 			alert(err);
 			this.props.history.push('/');
 		})
+	}
+
+	//finds board from URL query id and preloads form
+	componentDidMount() {
+		if (query['_id'] !== undefined) {
+			this.findBoard();
+		}
 	}
 
 	render() { 
