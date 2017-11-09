@@ -1,20 +1,69 @@
 import React from 'react';
 import {reduxForm, Field} from 'redux-form';
-import {API_BASE_URL} from '../config';
-
-/** 
- * File input workarround:
- * More info: http://redux-form.com/5.2.5/#/examples/file?_k=57hmlw
- */
-const customFileInput = (field) => {
-  delete field.input.value; // <-- just delete the value property
-  return <input type="file" id="file" {...field.input} />;
-};
+import {API_BASE_URL, CLOUDINARY_UPLOAD_PRESET, CLOUDINARY_UPLOAD_URL} from '../config';
+import Dropzone from 'react-dropzone';
+import request from 'superagent';
 
 export class NewBoardForm extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            uploadedFile: null,
+            uploadedFileCloudinaryUrl: ''
+        };
+    }
+
+    handleImageUpload(file) {
+        let upload = request.post(CLOUDINARY_UPLOAD_URL)
+            .field('upload_preset', CLOUDINARY_UPLOAD_PRESET)
+            .field('file', file);
+
+        upload.end((err, res) => {
+            if (err) {
+                console.error(err);
+            }
+            if (res.body.secure_url !== '') {
+                this.setState({
+                   uploadedFileCloudinaryUrl: res.body.secure_url 
+                });
+            }
+        })
+    }
+
+    onImageDrop(files) {
+        if (files[0].size > 20 * 1024 * 1024) {
+            alert('File size exceeds max of 20 MB!')
+        }
+        else {
+            this.setState({
+                uploadedFile: files[0]
+            });
+            this.handleImageUpload(files[0]);
+        }
+    }
+
+    //POST the board to the database
+    postBoard(board) {
+        const options = {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(board)
+        }
+        fetch(`${API_BASE_URL}/boards`, options)
+        .then(res => {
+            if (res.ok) {
+                alert('Your board is posted. Check your email for confirmation!');
+                this.props.history.push('/');
+            }
+            else { 
+                throw new Error('No response from SurfList API')
+            }
+        })
+    }
     
     onSubmit(values) {
-        const board = Object.assign({}, values, {image: "Haven't figured this out yet"});
+        const board = Object.assign({}, values, {image: this.state.uploadedFileCloudinaryUrl});
         //gets lat and lng from zip using GoogleMaps Geocoding API
         fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${values.zip},USA`)
         .then(res => {
@@ -31,22 +80,7 @@ export class NewBoardForm extends React.Component {
                     type: "Point",
                     coordinates: [lng, lat]
                 }
-                //POST the board to the database
-                const post = {
-                    method: 'POST',
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify(board)
-                }
-                fetch(`${API_BASE_URL}/boards`, post)
-                .then(res => {
-                    if (res.ok) {
-                        alert('Your board is posted. Check your email for confirmation!');
-                        this.props.history.push('/');
-                    }
-                    else { 
-                        throw new Error('No response from SurfList API')
-                    }
-                })
+                this.postBoard(board);
             })
         .catch(err => {
             console.error(err);
@@ -172,9 +206,16 @@ export class NewBoardForm extends React.Component {
                     </div>
                 </div>
 
-                <label htmlFor="image">Image:</label>
-                <div id="image">
-                    <Field name="image" component={customFileInput} type="file"/>
+                <div>
+                    {this.state.uploadedFileCloudinaryUrl === '' ? 
+                    <Dropzone multiple={false} accept="image/*" onDrop={this.onImageDrop.bind(this)}>
+                        <p>Drop an image or click to select</p>
+                    </Dropzone>
+                     :
+                    <div>
+                        <p>{this.state.uploadedFile.name}</p>
+                        <img alt="board to sell" src={this.state.uploadedFileCloudinaryUrl} />
+                    </div>}
                 </div>
 
                 <label htmlFor="email">Your Email:</label> 

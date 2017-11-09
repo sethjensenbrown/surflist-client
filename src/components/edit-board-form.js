@@ -1,17 +1,70 @@
 import React from 'react';
 import {reduxForm, Field} from 'redux-form';
-import {API_BASE_URL} from '../config';
-
-//File input workarround: More info at http://redux-form.com/5.2.5/#/examples/file?_k=57hmlw
-const customFileInput = (field) => {
-  delete field.input.value; // <-- just delete the value property
-  return <input type="file" id="file" {...field.input} />;
-};
+import {API_BASE_URL, CLOUDINARY_UPLOAD_PRESET, CLOUDINARY_UPLOAD_URL} from '../config';
+import Dropzone from 'react-dropzone';
+import request from 'superagent';
 
 export class EditBoardForm extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            uploadedFileCloudinaryUrl: ''
+        };
+    }
+
+    handleImageUpload(file) {
+        let upload = request.post(CLOUDINARY_UPLOAD_URL)
+            .field('upload_preset', CLOUDINARY_UPLOAD_PRESET)
+            .field('file', file);
+
+        upload.end((err, res) => {
+            if (err) {
+                console.error(err);
+            }
+            if (res.body.secure_url !== '') {
+                this.setState({
+                   uploadedFileCloudinaryUrl: res.body.secure_url 
+                });
+            }
+        })
+    }
+
+    onImageDrop(files) {
+        if (files[0].size > 20 * 1024 * 1024) {
+            alert('File size exceeds max of 20 MB!')
+        }
+        else {
+            this.handleImageUpload(files[0]);
+        }   
+    }
+
+    updateBoard(board) {
+        const options = {
+            method: 'PUT',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(board)
+        }
+        //update the board in the database
+        fetch(`${API_BASE_URL}/boards?_id=${this.props.boardId}`, options)
+        .then(res => {
+            //if succesful, alert and redirect to homepage
+            if (res.ok) {
+                alert('Your board has been updated.');
+                this.props.history.push('/');
+            }
+            else { 
+                throw new Error('No response from SurfList API')
+            }
+        })
+    }
     
     onSubmit(values) {
-        const board = Object.assign({}, values, {image: "Haven't figured this out yet", _id: this.props.boardId});
+        const board = Object.assign({}, values, {_id: this.props.boardId});
+        //if new image was uploaded, changes the image url
+        if(this.state.uploadedFileCloudinaryUrl !== '') {
+            board.image = this.state.uploadedFileCloudinaryUrl;
+        }
         //gets lat and lng from zip using GoogleMaps Geocoding API
         fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${values.zip},USA`)
         .then(res => {
@@ -28,23 +81,7 @@ export class EditBoardForm extends React.Component {
                     type: "Point",
                     coordinates: [lng, lat]
                 }
-                //POST the board to the database
-                const options = {
-                    method: 'PUT',
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify(board)
-                }
-                fetch(`${API_BASE_URL}/boards?_id=${this.props.boardId}`, options)
-                .then(res => {
-                    //if succesful, alert and redirect to homepage
-                    if (res.ok) {
-                        alert('Your board has been updated.');
-                        this.props.history.push('/');
-                    }
-                    else { 
-                        throw new Error('No response from SurfList API')
-                    }
-                })
+                this.updateBoard(board);
             })
         .catch(err => {
             console.error(err);
@@ -55,6 +92,10 @@ export class EditBoardForm extends React.Component {
     handleDelete() {
         //confirm before deleting
         if (window.confirm('Are you sure you want to Delete this board from SurfList?')) {
+
+            //DELETE IMG FROM CLOUD
+
+
             fetch(`${API_BASE_URL}/boards?_id=${this.props.boardId}`, {method: 'DELETE'})
             .then( res => {
                 //if successful, alert and redirect to homepage
@@ -74,6 +115,15 @@ export class EditBoardForm extends React.Component {
     }
 
 	render() {
+        let oldImage = '';
+        if (this.props.initialValues) {
+            oldImage = (
+                <div>
+                    <p>Old Image:</p>
+                    <img alt="board to sell" src={this.props.initialValues.image} />
+                </div>
+        );}
+
         return (
             <form id="edit-board-form" name="edit-board-form" >
 
@@ -189,9 +239,22 @@ export class EditBoardForm extends React.Component {
                     </div>
                 </div>
 
-                <label htmlFor="image">Image:</label>
-                <div id="image">
-                    <Field name="image" component={customFileInput} type="file"/>
+                <div>
+                    {oldImage}
+                    <br/>
+                    {this.state.uploadedFileCloudinaryUrl === '' ? 
+                    <div>
+                        <p>Select a new image:</p>
+                        <Dropzone multiple={false} accept="image/*" onDrop={this.onImageDrop.bind(this)}>
+                            <p>Drop an image or click to select</p>
+                        </Dropzone>
+                    </div>
+                    :
+                    <div>
+                        <p>New Image:</p>
+                        <img alt="board to sell" src={this.state.uploadedFileCloudinaryUrl} />
+                    </div>}
+                    <br/>
                 </div>
 
                 <p> 
