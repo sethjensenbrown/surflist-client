@@ -6,7 +6,7 @@ export default function BoardSearch(props) {
 	return (
         <div className="row">
             <div className="medium-4 columns">
-                <SearchForm name="find-board" history={props.history}/>
+                <SearchForm history={props.history}/>
             </div>
             <Aside/>
         </div>

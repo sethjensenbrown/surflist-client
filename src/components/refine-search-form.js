@@ -1,7 +1,7 @@
 import React from 'react';
 import {reduxForm, Field} from 'redux-form';
 
-export class SearchForm extends React.Component {
+export class RefineSearchForm extends React.Component {
     
     onSubmit(values) {
         const keys = Object.keys(values);
@@ -11,6 +11,7 @@ export class SearchForm extends React.Component {
         });
         query = query.slice(0,-1);
         this.props.history.push(`/results?${query}`);
+        this.props.onSubmit();
     }
 
 	render() {
@@ -135,12 +136,12 @@ export class SearchForm extends React.Component {
                     </div>
                 </div>
 
-                <button type="submit" className="button">Find a board</button>
+                <button type="submit" className="button">Refine search</button>
             </form>
         )
     }
 }
 
 export default reduxForm({
-    form: 'search',
-})(SearchForm);
+    form: 'refine-search',
+})(RefineSearchForm);
