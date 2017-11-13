@@ -208,16 +208,16 @@ export class EditBoardForm extends React.Component {
                 <div className="board-type">
                     <label htmlFor="type">Type of Board:</label>
                     <div id="type">
-                        <Field name="board-type" value="type-short" component="input" type="radio"/>
+                        <Field name="board-type" value="shortboard" component="input" type="radio"/>
                         <label htmlFor="type-short">shortboard ( - 7' )</label>
                         <br />
-                        <Field name="board-type" value="type-fun"  component="input" type="radio"/>
+                        <Field name="board-type" value="funboard"  component="input" type="radio"/>
                         <label htmlFor="type-fun">funboard ( 7' - 9' )</label>
                         <br />
-                        <Field name="board-type" value="type-long" component="input" type="radio"/>
+                        <Field name="board-type" value="longboard" component="input" type="radio"/>
                         <label htmlFor="type-long">longboard ( 9' + )</label>
                         <br />
-                        <Field name="board-type" value="type-sup"  component="input" type="radio"/>
+                        <Field name="board-type" value="supboard"  component="input" type="radio"/>
                         <label htmlFor="type-sup">SUP</label>
                     </div>
                 </div>
@@ -225,16 +225,16 @@ export class EditBoardForm extends React.Component {
                 <div className="board-condition">
                     <label htmlFor="condition">Condition:</label>
                     <div id="condition">
-                        <Field name="board-condition" value="condition-new" component="input" type="radio" />
+                        <Field name="board-condition" value="new" component="input" type="radio" />
                         <label htmlFor="condition-new">new</label>
                         <br />
-                        <Field name="board-condition" value="condition-great" component="input" type="radio" />
+                        <Field name="board-condition" value="great" component="input" type="radio" />
                         <label htmlFor="condition-great">great</label>
                         <br />
-                        <Field name="board-condition" value="condition-decent" component="input" type="radio" />
+                        <Field name="board-condition" value="decent" component="input" type="radio" />
                         <label htmlFor="condition-decent">decent</label>
                         <br />
-                        <Field name="board-condition" value="condition-wrecked" component="input" type="radio" />
+                        <Field name="board-condition" value="wrecked" component="input" type="radio" />
                         <label htmlFor="condition-wrecked">wrecked</label>
                     </div>
                 </div>

@@ -105,34 +105,34 @@ export class RefineSearchForm extends React.Component {
                 <div className="board-type">
                     <label htmlFor="type">Type of Board:</label>
                     <div id="type">
-                        <Field name="type-short" component="input" type="checkbox"/>
-                        <label htmlFor="type-short">shortboard ( - 7' )</label>
+                        <Field name="shortboard" component="input" type="checkbox"/>
+                        <label htmlFor="shortboard">shortboard ( - 7' )</label>
                         <br />
-                        <Field name="type-fun"  component="input" type="checkbox"/>
-                        <label htmlFor="type-fun">funboard ( 7' - 9' )</label>
+                        <Field name="funboard"  component="input" type="checkbox"/>
+                        <label htmlFor="funboard">funboard ( 7' - 9' )</label>
                         <br />
-                        <Field name="type-long" component="input" type="checkbox"/>
-                        <label htmlFor="type-long">longboard ( 9' + )</label>
+                        <Field name="longboard" component="input" type="checkbox"/>
+                        <label htmlFor="longboard">longboard ( 9' + )</label>
                         <br />
-                        <Field name="type-sup"  component="input" type="checkbox"/>
-                        <label htmlFor="type-sup">SUP</label>
+                        <Field name="sup"  component="input" type="checkbox"/>
+                        <label htmlFor="sup">SUP</label>
                     </div>
                 </div>
 
                 <div className="board-condition">
                     <label htmlFor="condition">Condition:</label>
                     <div id="condition">
-                        <Field name="condition-new" component="input" type="checkbox" />
-                        <label htmlFor="condition-new">new</label>
+                        <Field name="new" component="input" type="checkbox" />
+                        <label htmlFor="new">new</label>
                         <br />
-                        <Field name="condition-great" component="input" type="checkbox" />
-                        <label htmlFor="condition-great">great</label>
+                        <Field name="great" component="input" type="checkbox" />
+                        <label htmlFor="great">great</label>
                         <br />
-                        <Field name="condition-decent" component="input" type="checkbox" />
-                        <label htmlFor="condition-decent">decent</label>
+                        <Field name="decent" component="input" type="checkbox" />
+                        <label htmlFor="decent">decent</label>
                         <br />
-                        <Field name="condition-wrecked" component="input" type="checkbox" />
-                        <label htmlFor="condition-wrecked">wrecked</label>
+                        <Field name="wrecked" component="input" type="checkbox" />
+                        <label htmlFor="wrecked">wrecked</label>
                     </div>
                 </div>
 
