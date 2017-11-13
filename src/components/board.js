@@ -4,8 +4,6 @@ import BoardCard from './board-card';
 import OfferForm from './offer-form';
 import {API_BASE_URL} from '../config';
 
-let query = window.location.search;
-
 export default class Board extends React.Component {
 	constructor(props) {
         super(props);
@@ -17,6 +15,7 @@ export default class Board extends React.Component {
     }
 
 	componentDidMount() {
+        let query = window.location.search;
         fetch(`${API_BASE_URL}/boards${query}`)
             .then(res => {
                 if (res.ok) {
@@ -40,6 +39,7 @@ export default class Board extends React.Component {
 	}
 
 	render() {
+        let query = window.location.search;
         let offer =''; 
         if(this.state.offering) {
             offer = (<OfferForm boardId={query}/>)

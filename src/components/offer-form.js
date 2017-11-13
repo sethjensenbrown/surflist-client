@@ -10,6 +10,7 @@ export class OfferForm extends React.Component {
             body: JSON.stringify(values)
         }
 	    // update the board in the database
+	    console.log(this.props.boardId)
 	    fetch(`${API_BASE_URL}/offer${this.props.boardId}`, options)
 	    .then(res => {
 	        //if succesful, alert and redirect to homepage
