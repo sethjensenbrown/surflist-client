@@ -1,5 +1,6 @@
 import React from 'react';
 import {reduxForm, Field} from 'redux-form';
+import {ifZipValidZip, maxGtMin, minLtMax, reqIfZip} from '../validators.js';
 
 export class SearchForm extends React.Component {
     
@@ -11,6 +12,29 @@ export class SearchForm extends React.Component {
         });
         query = query.slice(0,-1);
         this.props.history.push(`/results?${query}`);
+    }
+
+    //creates custom field elements for form vlidation
+    renderField({input, placeholder, type, element, meta: {touched, error} }) { 
+        const Element = element || 'input';
+        return (
+            <div>
+                {touched && (error && <span style={{color: "red", fontSize: 12}}>*{error}</span>)}
+                <Element {...input} placeholder={placeholder} type={type}/>
+            </div>
+        )
+    }
+
+    // creates custom select field elements from form validation
+    renderSelectField({ input, meta: { touched, error }, children }) {
+        return (
+            <div>
+                {touched && error && <span style={{color: "red", fontSize: 12}}>*{error}</span>}
+                <select {...input}>
+                    {children}
+                </select>
+            </div>
+        )
     }
 
 	render() {
@@ -81,8 +105,9 @@ export class SearchForm extends React.Component {
                 <div className="search-by-zip">
                     <label htmlFor="location-zip">Search by Zip Code:</label>
                     <div id="location-zip">
-                        <Field name="zip" component="input" type="number" placeholder="49125"/>
-                        <Field name="radius" component="select">
+                        <Field name="zip" component={this.renderField} type="number" 
+                        placeholder="49125" validate={[ifZipValidZip]}/>
+                        <Field name="radius" component={this.renderSelectField} validate={[reqIfZip]}>
                             <option value="">Select search radius</option>
                             <option value="15">15 miles</option>
                             <option value="25">25 miles</option>
@@ -96,8 +121,10 @@ export class SearchForm extends React.Component {
                 <div className="price-range">
                     <label htmlFor="price">Price:</label>
                     <div id="price">
-                        <Field name="price-min" component="input" type="number" placeholder="min"/>
-                        <Field name="price-max" component="input" type="number" placeholder="max"/>
+                        <Field name="price-min" component={this.renderField} type="number" 
+                        placeholder="min" validate={[minLtMax]}/>
+                        <Field name="price-max" component={this.renderField} type="number" 
+                        placeholder="max" validate={[maxGtMin]}/>
                     </div>
                 </div>
 
@@ -143,4 +170,6 @@ export class SearchForm extends React.Component {
 
 export default reduxForm({
     form: 'search',
+    onSubmitFail: () =>
+        alert('Submission Error: check your entries and try again.')
 })(SearchForm);

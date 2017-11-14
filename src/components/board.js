@@ -42,7 +42,7 @@ export default class Board extends React.Component {
         let query = window.location.search;
         let offer =''; 
         if(this.state.offering) {
-            offer = (<OfferForm boardId={query}/>)
+            offer = (<OfferForm boardId={query} onSuccess={() => this.setState({offering: false})}/>)
         }
         else {
             offer = (<button className="button" onClick={() => this.setState({offering: true}) }>Make An Offer</button>)

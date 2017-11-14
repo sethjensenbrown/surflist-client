@@ -3,6 +3,7 @@ import {reduxForm, Field} from 'redux-form';
 import {API_BASE_URL, CLOUDINARY_UPLOAD_PRESET, CLOUDINARY_UPLOAD_URL} from '../config';
 import Dropzone from 'react-dropzone';
 import request from 'superagent';
+import {required, nonEmpty, isValidZip, email, confirmEmail} from '../validators.js';
 
 export class NewBoardForm extends React.Component {
     constructor(props) {
@@ -61,8 +62,8 @@ export class NewBoardForm extends React.Component {
             }
         })
     }
-    
-    onSubmit(values) {
+
+    processValues(values) {
         const board = Object.assign({}, values, {image: this.state.uploadedFileCloudinaryUrl});
         //gets lat and lng from zip using GoogleMaps Geocoding API
         fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${values.zip},USA`)
@@ -83,9 +84,44 @@ export class NewBoardForm extends React.Component {
                 this.postBoard(board);
             })
         .catch(err => {
-            console.error(err);
-            alert('Something went wrong');
+            alert('Uh oh, soething went wrong!');
         })  
+    }
+
+    onSubmit(values) {
+        if(!values['board-type']) {
+            alert('Plesase select a board type');
+        } 
+        else if (!values['board-condition']) {
+            alert('Plesase select a board condition');
+        }
+        else if (this.state.uploadedFileCloudinaryUrl === '') {
+            alert('Plesase select an image');
+        }
+        else {this.processValues(values);}
+    }
+
+    //creates custom field elements for form vlidation
+    renderField({input, placeholder, type, element, meta: {touched, error} }) { 
+        const Element = element || 'input';
+        return (
+            <div>
+                {touched && (error && <span style={{color: "red", fontSize: 12}}>*{error}</span>)}
+                <Element {...input} placeholder={placeholder} type={type}/>
+            </div>
+        )
+    }
+    
+    // creates custom select field elements from form validation
+    renderSelectField({ input, meta: { touched, error }, children }) {
+        return (
+            <div>
+                {touched && error && <span style={{color: "red", fontSize: 12}}>*{error}</span>}
+                <select {...input}>
+                    {children}
+                </select>
+            </div>
+        )
     }
 
 	render() {
@@ -96,22 +132,25 @@ export class NewBoardForm extends React.Component {
             onSubmit={this.props.handleSubmit(values => this.onSubmit(values))}>
                 <label htmlFor="title">Title:</label>
                 <div id="title">
-                    <Field name="title" component="input" type="text" placeholder="ex. Surfboard for Sale!" />
+                    <Field name="title" component={this.renderField} type="text" 
+                    placeholder="ex. Surfboard for Sale!" validate={[required, nonEmpty]}/>
                 </div>
 
                 <label htmlFor="price">Price:</label>
                 <div id="price">
-                    <Field name="price" component="input" type="number" placeholder="$100"/>
+                    <Field name="price" component={this.renderField} type="number" 
+                    placeholder="$100" validate={[required]}/>
                 </div>
 
                 <label htmlFor="description">Description:</label>
                 <div id="description">
-                    <Field name="description" component="textarea" placeholder="ex. This board is super dope!"></Field>
+                    <Field name="description" component={this.renderField} element="textarea"
+                    placeholder="ex. This board is super dope!" validate={[required, nonEmpty]}></Field>
                 </div>
 
                 <div className="select-state">
                     <label htmlFor="location-state">State:</label>
-                    <Field name="state" component="select">
+                    <Field name="state" component={this.renderSelectField} validate={[required]}>
                         <option value="">Select a state</option>
                         <option value="AL">Alabama</option>
                         <option value="AK">Alaska</option>
@@ -169,7 +208,8 @@ export class NewBoardForm extends React.Component {
 
                 <label htmlFor="location-zip">Zip Code:</label>
                 <div id="location-zip">
-                    <Field name="zip" component="input" type="text" placeholder="ex: 49125"/>
+                    <Field name="zip" component={this.renderField} type="number" 
+                    placeholder="ex: 49125" validate={[required, isValidZip]}/>
                 </div>
 
                 <div className="board-type">
@@ -220,8 +260,10 @@ export class NewBoardForm extends React.Component {
 
                 <label htmlFor="email">Your Email:</label> 
                 <div id="email"> 
-                    <Field name="email" component="input" type="email" placeholder="bigwavedave@pitted.win" /> 
-                    <Field name="confirm-email" component="input" type="email" placeholder="Confirm Email" /> 
+                    <Field name="email" component={this.renderField} type="email" 
+                    placeholder="bigwavedave@pitted.win" validate={[required, email]}/> 
+                    <Field name="confirm-email" component={this.renderField} type="email" 
+                    placeholder="Confirm Email" validate={[required, email, confirmEmail]}/> 
                 </div>
 
                 <p><button className="button">Let's Sell This Thing!</button></p>
@@ -232,4 +274,6 @@ export class NewBoardForm extends React.Component {
 
 export default reduxForm({
     form: 'new-board-form',
+    onSubmitFail: () =>
+        alert('Submission Error: check your entries and try again.')
 })(NewBoardForm);
