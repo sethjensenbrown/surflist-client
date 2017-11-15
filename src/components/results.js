@@ -130,15 +130,15 @@ export default class Results extends React.Component {
 
         return (
     		<div className="row">
+                <div className="large-6 columns">
+                    {results}
+                </div>
                 <div className="large-3 columns ">
                     <label htmlFor="refine-search">Refine Your Search</label>
                     <RefineSearchForm 
                     history={this.props.history} 
                     onSubmit={() => this.onRefine()} 
                     initialValues={this.state.initialValues}/>
-                </div>
-                <div className="large-6 columns">
-                    {results}
                 </div>
                 <Aside/>
             </div>
