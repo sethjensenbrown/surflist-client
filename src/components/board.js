@@ -14,7 +14,7 @@ export default class Board extends React.Component {
         }
     }
 
-	componentDidMount() {
+    handleUpload() {
         let query = window.location.search;
         fetch(`${API_BASE_URL}/boards${query}`)
             .then(res => {
@@ -36,6 +36,10 @@ export default class Board extends React.Component {
             .catch(err => {
                 console.error(err);
             })
+    }
+
+	componentDidMount() {
+        this.handleUpload();
 	}
 
 	render() {

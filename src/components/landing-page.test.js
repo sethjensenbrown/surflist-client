@@ -1,10 +1,10 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 
-import App from './app';
+import LandingPage from './landing-page';
 
-describe('<App />', () => {
+describe('<LandingPage />', () => {
     it('Renders without crashing', () => {
-        shallow(<App />);
+        shallow(<LandingPage />);
     });
 });

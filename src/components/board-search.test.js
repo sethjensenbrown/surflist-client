@@ -1,10 +1,10 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 
-import App from './app';
+import BoardSearch from './board-search';
 
-describe('<App />', () => {
+describe('<BoardSearch />', () => {
     it('Renders without crashing', () => {
-        shallow(<App />);
+        shallow(<BoardSearch />);
     });
 });

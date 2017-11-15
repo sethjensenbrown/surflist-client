@@ -1,10 +1,10 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 
-import App from './app';
+import NewBoard from './new-board';
 
-describe('<App />', () => {
+describe('<NewBoard />', () => {
     it('Renders without crashing', () => {
-        shallow(<App />);
+        shallow(<NewBoard />);
     });
 });

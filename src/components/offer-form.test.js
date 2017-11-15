@@ -1,10 +1,10 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 
-import App from './app';
+import OfferForm from './offer-form';
 
-describe('<App />', () => {
+describe('<OfferForm />', () => {
     it('Renders without crashing', () => {
-        shallow(<App />);
+        shallow(<OfferForm />);
     });
 });

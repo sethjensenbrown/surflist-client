@@ -1,10 +1,10 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 
-import App from './app';
+import SearchForm from './search-form';
 
-describe('<App />', () => {
+describe('<SearchForm />', () => {
     it('Renders without crashing', () => {
-        shallow(<App />);
+        shallow(<SearchForm />);
     });
 });
