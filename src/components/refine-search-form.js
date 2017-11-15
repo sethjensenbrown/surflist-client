@@ -4,7 +4,7 @@ import {ifZipValidZip, maxGtMin, minLtMax, reqIfZip} from '../validators.js';
 
 export class RefineSearchForm extends React.Component {
     
-    onSubmit(values) {
+    handleSearch(values) {
         const keys = Object.keys(values);
         let query = "";
         keys.forEach(key => {
@@ -13,6 +13,34 @@ export class RefineSearchForm extends React.Component {
         query = query.slice(0,-1);
         this.props.history.push(`/results?${query}`);
         this.props.onSubmit();
+    }
+
+    onSubmit(_values) {
+        let values = Object.assign({}, _values)
+        if (values.zip) {
+            fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${values.zip},USA`)
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw new Error('No response from GoogleMaps API');
+            })
+            .then(res => {
+                    //adds lat and lng to board object for zip code search capabilities
+                    let lng = res.results[0].geometry.location.lng;
+                    let lat = res.results[0].geometry.location.lat;
+                    values.lat = lat;
+                    values.lng = lng;
+                    this.handleSearch(values);
+                })
+            .catch(err => {
+                console.error(err);
+                alert('Something went wrong');
+            })  
+        }
+        else {
+            this.handleSearch(values);
+        }
     }
 
     //creates custom field elements for form vlidation
