@@ -38,7 +38,7 @@ export default function LandingPage() {
 	                to make/accept an offer.</p>
 	                <p>When you post a board for sale, you'll recieve an email confirmation 
 	                with links to edit and delete the post if necessary.</p>
-	                <p>When making an ofer on a board an email will be sent to the seller, 
+	                <p>When making an offer on a board an email will be sent to the seller, 
 	                it's up to you to give them whatever contact info you want.</p>
 	            </div>
 	            <div className="large-4 columns">
