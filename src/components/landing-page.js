@@ -13,7 +13,7 @@ export default function LandingPage() {
 	                Filter your search results based on location, price, style, and condition.</p>
 	            </div>
 	            <div className="large-4 columns">
-	                <img alt="placeholder" src="http://placehold.it/400x300&text=screeenshot"/>
+	                <img alt="placeholder" src="http://res.cloudinary.com/sethjensenbrown/image/upload/bo_1px_solid_rgb:000000,c_lpad,h_250,w_400/v1510788036/Screen_Shot_2017-11-15_at_3.16.23_PM_mpsrkn.png"/>
 	            </div>
 	        </div>
 	        <br />
@@ -27,7 +27,7 @@ export default function LandingPage() {
 	                and watch the offers come in.</p>
 	            </div>
 	            <div className="large-4 columns">
-	                <img alt="placeholder" src="http://placehold.it/400x300&text=screenshot"/>
+	                <img alt="placeholder" src="http://res.cloudinary.com/sethjensenbrown/image/upload/bo_1px_solid_rgb:000000,c_lpad,h_250,w_400/v1510788050/Screen_Shot_2017-11-15_at_3.17.31_PM_whkchq.png"/>
 	            </div>
 	        </div>
 	        <br />
@@ -42,7 +42,7 @@ export default function LandingPage() {
 	                it's up to you to give them whatever contact info you want.</p>
 	            </div>
 	            <div className="large-4 columns">
-	                <img alt="placeholder" src="http://placehold.it/400x300&text=screenshot"/>
+	                <img alt="placeholder" src="http://res.cloudinary.com/sethjensenbrown/image/upload/bo_1px_solid_rgb:000000,c_lpad,h_250,w_400/v1510788056/Screen_Shot_2017-11-15_at_3.18.14_PM_zqm8ho.png"/>
 	            </div>
 	        </div>
 	        <br />
