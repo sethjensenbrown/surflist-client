@@ -36,7 +36,7 @@ export default function LandingPage() {
 	                <h4>No account required.</h4>
 	                <p>Surflist works with your email, so you stay anonymous until you decide 
 	                to make/accept an offer.</p>
-	                <p>When you post a board for sale, you'll recieve an email confirmation 
+	                <p>When you post a board for sale, you'll receive an email confirmation 
 	                with links to edit and delete the post if necessary.</p>
 	                <p>When making an offer on a board an email will be sent to the seller, 
 	                it's up to you to give them whatever contact info you want.</p>
