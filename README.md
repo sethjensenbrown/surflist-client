@@ -4,7 +4,7 @@
 
 ****
 
-#### Find you next surfboard.
+#### Find your next surfboard.
 
 Surflist connects you with other surfers selling their boards. 
 We are by surfers for surfers. Don't worry about having to sort through the junk you might 
@@ -58,7 +58,8 @@ using the Send In Blue API.
 #### Technologies Used
 
 HTML5, CSS3, Foundations, JavaScript, Node.js, Express, React, ReduxForm, Mongoose, MongoDb, 
-Enzyme, Chai, GoogleMaps Api, SendInBlue API, Cloudinary API, Dropzone
+Enzyme, Chai, GoogleMaps Api, SendInBlue Api, Cloudinary API, Dropzone, TravisCI, Heroku, 
+Netlify, Git, GitHub
 
 
 

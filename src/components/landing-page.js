@@ -5,7 +5,7 @@ export default function LandingPage() {
 		<div className="landingPage">
 	        <div className="row">
 	            <div className="large-8 columns">
-	                <h4>Find you next surfboard.</h4>
+	                <h4>Find your next surfboard.</h4>
 	                <p>Surflist connects you with other surfers selling their boards. 
 	                We are by surfers for surfers.</p>
 	                <p>Don't worry about having to sort through the junk you might 
